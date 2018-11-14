@@ -23,6 +23,7 @@ Route::group(["prefix" => "v1"],function (){
            "update",
            "destroy"
        ]);
+       Route::post("/facebook-service/{id}",["uses" => "ActionAccountController@postToFacebook"]);
    });
 });
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -28,12 +28,10 @@ class AccountRequest extends FormRequest
         {
             case "POST" : return [
                 "email" => "required|email",
-                "password" => "required|min:6",
-                "password_confirm" => "required|same:password"
+                "token" => "required|min:6",
             ];
             case "PUT"  : return [
-                "password" => "required|min:6",
-                "password_confirm" => "required|same:password"
+                "token" => "required|min:6",
             ];
         }
         return [

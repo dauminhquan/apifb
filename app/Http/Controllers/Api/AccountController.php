@@ -14,10 +14,10 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        return $user->accounts;
+        return $user->accounts()->paginate($request->limit == null ? 20 : $request->limit);
     }
 
     /**
@@ -41,7 +41,7 @@ class AccountController extends Controller
         $user = Auth::user();
         $account = $user->accounts()->create([
            "email" => $request->email,
-            "password" => $request->password
+            "token" => $request->token
         ]);
         return $account;
     }
@@ -89,7 +89,7 @@ class AccountController extends Controller
         $account = $user->accounts()->where("id","=",$id)->first();
         if($account!= null)
         {
-            $account->password = $request->password;
+            $account->token = $request->token;
             $account->save();
             return $account;
         }
@@ -106,6 +106,15 @@ class AccountController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = Auth::user();
+        $account = $user->accounts()->where("id","=",$id)->first();
+        if($account == null)
+        {
+            return response()->json([
+                "error" => "Account not found"
+            ]);
+        }
+        $account->delete();
+        return $account;
     }
 }
